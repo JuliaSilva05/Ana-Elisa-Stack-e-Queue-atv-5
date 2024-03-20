@@ -1,0 +1,86 @@
+//abaixo está o mesmo código que usei no exercicio anterior, mas vou tentar modificar para ver se uma palavra é um palíndromo ou não
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct noPilha {
+    int info;
+    struct noPilha* prox;
+} TNoPilha;
+typedef TNoPilha* Stack;
+
+void inicializar(Stack* pilha) {
+    *pilha = NULL;
+}
+
+//push concluído
+void push(Stack* pilha, int i, char string[i]) { // empilhar
+  TNoPilha* novo;
+  //alocar o nó
+  novo = (TNoPilha*)malloc(sizeof(TNoPilha));
+  //armazenar a informação no nó
+  novo->info = string[i];
+  //inserir o nó no topo da pilha
+  novo->prox = *pilha;
+  *pilha = novo;
+}
+
+char pop(Stack* pilha) {  // desempilhar
+  TNoPilha* aux;
+  char letra;  
+  aux = *pilha;
+  letra = aux->info;
+  //retirar o nó da pilha
+  *pilha = (*pilha)->prox;
+  //desalocar o nó
+  free(aux);
+  //retornar o valor desempilhado
+  return letra;
+}
+
+int main(void) {
+  char palavra[100];
+  Stack minhaPilha;
+  inicializar(&minhaPilha);
+  printf("Diga uma palavra: ");
+  scanf("%s" , palavra);
+  int i = 0;
+  while (palavra[i] != '\0'){
+    push(&minhaPilha, i, palavra);
+    //printf("%c\n", minhaPilha->info); //fiz esse pra testar se tava funcionando do jeito certo
+    //num = num/2;
+    i++;
+  }
+
+  char novapalavra[100];
+  int count = 0; //contar quantas letras tem em comum
+  
+  printf("A palavra de trás para frente é: ");
+  while (minhaPilha != NULL){
+    //printf("%c", pop(&minhaPilha));
+    for (int j = 0; j < i; j++){
+      novapalavra[j] = pop(&minhaPilha);
+    }
+    
+  }
+
+  printf("%s",novapalavra);
+  
+  printf("\n");
+  for (int j = 0; j < i; j++){
+    if (palavra[j] == novapalavra[j]){
+      count++;
+      //printf("%d\n", count);
+    }
+  }
+
+  if (count == strlen(palavra)){
+    printf("A palavra é um palíndromo\n");
+  } else{
+    printf( "A palavra não é um palíndromo\n");
+  }
+
+
+  return 0;
+}
