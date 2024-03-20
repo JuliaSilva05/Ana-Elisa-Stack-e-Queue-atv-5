@@ -1,0 +1,134 @@
+// Esboço do código de uma Queue de números inteiros implementada utilizando o conceito de lista encadeada.
+// Implementar as partes do código que estão incompletas.
+
+// mesmo codigo da questao 4, mas com mudanças pra satisfazer o que a questao 5 pede
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct noQueue {
+    int info;
+    struct noQueue* prox;
+}TNoQueue;
+
+typedef struct queue {
+    TNoQueue* inicio, * fim;
+} Queue;
+
+void inicializar(Queue* fila) {
+    fila->inicio = NULL;
+    fila->fim = NULL;
+}
+
+int isEmpty(Queue fila) { // checa se a fila está vazia
+    if (fila.inicio == NULL && fila.fim ==NULL){
+      return 1;
+    } else{
+      return 0;
+    }
+} //precisa q tanto inicio quanto fim sejam nulos p/ funcionar
+
+void enqueue(Queue* fila, int valor) { // enfileirar
+    TNoQueue* novo;
+    TNoQueue* aux;
+    novo = (TNoQueue*)malloc(sizeof(TNoQueue));
+    novo->info = valor;
+    novo->prox = NULL;
+    if (isEmpty(*fila)==1){ //se tiver vazia
+      fila->inicio = novo;
+      fila->fim = novo;
+    } else{ //se nao tiver vazia
+      fila->fim->prox = novo; //o ultimo da fila passa a ter o endereço de novo
+      fila->fim = novo;//fim passa a ter endereço do novo
+
+    }
+
+}
+
+int dequeue(Queue* fila) {  // desenfileirar
+  int valor;
+  TNoQueue* aux;
+  valor = fila->inicio->info; //valor é o primeiro da fila
+  aux = fila->inicio; //aux recebe endereço do inicio
+  fila->inicio = fila->inicio->prox; //inicio recebe o endereço do próximo
+  free(aux);
+  if (fila->inicio == NULL){ //atualizar o fim
+    fila->fim = NULL;
+  } //se nao atualizar o fim, a funcao isEmpty não vai funcionar 100% corretamente
+
+  return valor;
+
+}
+
+int head(Queue fila) {   // retornar o valor que está no início da fila
+    return fila.inicio->info; //retornando o valor no inicio
+}
+
+int isFull(Queue fila, int pessoas) { // checa se a fila está cheia
+  if (pessoas < 20){
+    return 0;
+  } else{
+    return 1;
+  }
+    
+  //sempre retorna 0, pois nunca vai ficar cheio
+}
+
+
+void exibirOpcoes() {
+    printf("\nOpções: \n");
+    printf("1 - Fornecer uma senha \n");
+    printf("2 - Chamar a próxima senha a ser atendida \n");
+    printf("3 - Quem é o próximo? \n");
+    printf("0 - Encerrar programa \n");
+    printf("Informe a opção desejada: ");
+}
+
+int main()
+{
+    Queue minhaFila;
+    inicializar(&minhaFila);
+    int op, num;
+    int pessoas = 0;
+    do {
+        exibirOpcoes();
+        scanf("%d", &op);
+        switch (op) {
+        case 1: printf("Informe o valor: "); //enqueue
+            scanf("%d", &num);
+            if (isFull(minhaFila, pessoas) == 0) {
+                enqueue(&minhaFila, num);
+                pessoas++;
+                printf("Senha retirada!\n");
+            }
+            else {
+                printf("Fila cheia!\n");
+            }
+            break;
+        case 2: //dequeue
+            if (isEmpty(minhaFila) == 0){
+              num = dequeue( &minhaFila);
+              pessoas--;
+              printf("Senha %d seguiu para ser atendido\n", num);
+            } else{
+              printf("Fila vazia!\n"); //queue vazia
+            }
+            break;
+        case 3: //head
+            if (isEmpty(minhaFila) == 0){
+              printf("A próxima senha a ser atendida é: %d\n", head(minhaFila));
+            } else{
+              printf("Fila vazia!\n");
+            }
+            break;
+        case 0: printf("Fim de programa!\n");
+            break;
+        default: printf("Opção inválida!\n");
+          printf("%d hey\n", pessoas);
+        }
+    } while (op != 0);
+    return 0;
+}
