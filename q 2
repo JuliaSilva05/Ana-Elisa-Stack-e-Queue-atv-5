@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct noPilha {
+    int info;
+    struct noPilha* prox;
+} TNoPilha;
+typedef TNoPilha* Stack;
+
+void inicializar(Stack* pilha) {
+    *pilha = NULL;
+}
+
+void push(Stack* pilha, int valor) { // empilhar
+  TNoPilha* novo;
+  //alocar o nó
+  novo = (TNoPilha*)malloc(sizeof(TNoPilha));
+  //armazenar a informação no nó
+  novo->info = valor;
+  //inserir o nó no topo da pilha
+  novo->prox = *pilha;
+  *pilha = novo;
+}
+
+int pop(Stack* pilha) {  // desempilhar
+  TNoPilha* aux;
+  int num;
+  aux = *pilha;
+  num = aux->info;
+  //retirar o nó da pilha
+  *pilha = (*pilha)->prox;
+  //desalocar o nó
+  free(aux);
+  //retornar o valor desempilhado
+  return num;
+}
+
+int main(void) {
+  int num;
+  Stack minhaPilha;
+  inicializar(&minhaPilha);
+  printf("Diga um número na notação decimal: ");
+  scanf("%d" , &num);
+  int count = 0;
+  while (num/2 > 0 || num == 1){
+    push(&minhaPilha, num%2);
+    //printf("%d/2 = %d a\n", num, num%2); //fiz esse pra testar se tava funcionando do jeito certo
+    num = num/2;
+    count++;
+  }
+
+  printf("A versão binária do número inserido é: ");
+  for (int i = 0; i < count; i++){
+    printf("%d",pop(&minhaPilha));
+  }
+   
+  return 0;
+}
